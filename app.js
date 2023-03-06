@@ -5,11 +5,18 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 const keys = require('./config/keys')
+const passport = require('passport')
+
+const authRoutes = require('./routes/auth')
+const categoryRoutes = require('./routes/category')
 
 // подключение к базе данных
 mongoose.connect(keys.mongoURI)
     .then(() => console.log('Соединение с базой данных прошло успешно'))
     .catch(error => console.log(error))
+
+app.use(passport.initialize())
+require('./middleware/passport')(passport)
 
 // для просмотра информации в командной строке
 app.use(morgan('dev'))
@@ -20,6 +27,10 @@ app.use(cors())
 // учим понимать json формат
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
+
+// роуты
+app.use('/api/auth', authRoutes)
+app.use('/api/category', categoryRoutes)
 
 
 module.exports = app
