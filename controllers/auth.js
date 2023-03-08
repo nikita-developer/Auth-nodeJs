@@ -11,12 +11,13 @@ module.exports.login = async (req, res) => {
     if(candidate) {
         const password = bcrypt.compareSync(req.body.password, candidate.password)
 
-        // генерация токена
         if(password) {
+            // генерация токена
             const token = jwt.sign({
                 userId: candidate._id,
-                email: candidate.email
-            }, keys.jwt, {expiresIn: 60 * 60})
+                email: candidate.email,
+                roles: candidate.roles,
+            }, keys.jwt, {expiresIn: '24h'})
 
             res.status(200).json({token: `Bearer ${token}`})
         } else {
@@ -42,7 +43,9 @@ module.exports.registration = async (req, res) => {
     // создаем объект с новым пользователем
     const user = new User({
         email: req.body.email,
-        password: bcrypt.hashSync(String(password), salt)
+        password: bcrypt.hashSync(String(password), salt),
+        name: req.body.name,
+        roles: ['user'],
     })
 
     // сохраняем в базу
