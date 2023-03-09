@@ -8,7 +8,7 @@ const keys = require('./config/keys')
 const passport = require('passport')
 
 const authRoutes = require('./routes/auth')
-const categoryRoutes = require('./routes/category')
+const usersRoutes = require('./routes/users')
 
 // подключение к базе данных
 mongoose.connect(keys.mongoURI)
@@ -30,7 +30,7 @@ app.use(bodyParser.json())
 
 // роуты
 app.use('/api/auth', authRoutes)
-app.use('/api/category', categoryRoutes)
+app.use('/api/users', usersRoutes)
 
 
 module.exports = app
